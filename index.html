@@ -177,6 +177,13 @@
     .sticky a:active{transform:scale(0.95) !important;transition-duration:60ms !important}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:50ms !important;animation-duration:50ms !important}.premium-card:hover,.unit-card:hover,.loc:hover,.feature:hover{transform:none !important}}
   </style>
+  <style>
+    .nav-register-pill{background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.42);color:#fff;border-radius:999px;padding:12px 20px;font-weight:950;font-size:16px;white-space:nowrap;text-decoration:none;transition:transform 250ms cubic-bezier(0.34,1.56,0.64,1),background 200ms ease}
+    .nav-register-pill:hover{background:rgba(255,255,255,.22);transform:scale(1.04)}
+    .nav-tel-pill{background:linear-gradient(135deg,#f2d99d,#c79b4a);color:#070707;border-radius:999px;padding:12px 20px;font-weight:950;font-size:16px;white-space:nowrap;text-decoration:none}
+    .nav-phone{display:flex;align-items:center;gap:10px}
+    @media(max-width:768px){.nav-register-pill{display:none}}
+  </style>
 </head>
 <body>
 
@@ -194,8 +201,8 @@
     <li><a href="#contact">분양문의</a></li>
   </ul>
   <div class="nav-phone">
-    <span>☎</span>
-    <a href="tel:18003688" style="color:#fff;font-size:18px;font-weight:700;text-decoration:none;">1800-3688</a>
+    <a href="#contact" class="nav-register-pill">관심고객 등록</a>
+    <a href="tel:18003688" class="nav-tel-pill">1800-3688</a>
   </div>
 </nav>
 
