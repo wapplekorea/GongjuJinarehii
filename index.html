@@ -31,7 +31,7 @@
   .nav-cta{background:var(--gold);color:var(--navy);padding:10px 20px;font-size:13px;font-weight:700;letter-spacing:.1em;border:none;cursor:pointer;text-decoration:none;}
 
   /* HERO */
-  #hero{height:100vh;background:linear-gradient(160deg,var(--navy2) 0%,var(--navy) 60%,#1e3a5f 100%);display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding-top:70px;}
+  #hero{height:100vh;background:linear-gradient(160deg,#101e36 0%,#182848 60%,#1e3a5f 100%);display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding-top:70px;}
   #hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a86c' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
   .hero-inner{position:relative;z-index:1;}
   .hero-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:.25em;padding:6px 18px;margin-bottom:32px;}
@@ -143,7 +143,10 @@
     /* 폼 필드 그리드 모바일 */
     .form-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
     @media(max-width:600px){.form-fields-grid{grid-template-columns:1fr;}}
-  .hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.28;}.loc-img{width:100%;border-radius:10px;margin-bottom:14px;object-fit:cover;}
+  .hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.75;}
+  #hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(10,18,40,.62) 0%,rgba(18,28,56,.38) 60%,rgba(10,22,50,.22) 100%);}
+  .hero-inner{position:relative;z-index:2;}
+  .hero-scroll{position:relative;z-index:2;}.loc-img{width:100%;border-radius:10px;margin-bottom:14px;object-fit:cover;}
   .type-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
   .tab-btn{background:rgba(255,255,255,.07);border:1px solid rgba(201,168,108,.3);color:#c9a86c;border-radius:999px;padding:12px 26px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;}
   .tab-btn.active,.tab-btn:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
@@ -227,7 +230,7 @@
 </div>
 
 <!-- HERO -->
-<section id="hero"><img class="hero-bg-img" src="assets/hero-bg.jpg" alt="공주월송 진아레히">
+<section id="hero"><img class="hero-bg-img" src="assets/hero-aerial.jpg" alt="공주월송 진아레히">
   <div class="hero-inner">
     <div class="hero-badge">GRAND OPEN · 선착순 동호지정 계약중</div>
     <p class="hero-sub">공주월송을 사는 새로운 방향</p>
