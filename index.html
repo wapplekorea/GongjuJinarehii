@@ -160,6 +160,11 @@
   .type-panel.active{display:block;}
   .type-panel img{width:100%;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.12);}
   .panel-info{margin-top:18px;color:#888;font-size:14px;font-weight:600;text-align:center;letter-spacing:.02em;}
+    /* date input placeholder */
+    input[type="date"].date-empty::-webkit-datetime-edit-text,
+    input[type="date"].date-empty::-webkit-datetime-edit-month-field,
+    input[type="date"].date-empty::-webkit-datetime-edit-day-field,
+    input[type="date"].date-empty::-webkit-datetime-edit-year-field{color:#aaa;}
   </style>
 
   <!-- Apple Design System -->
@@ -508,7 +513,7 @@
           </div>
           <div>
             <label style="display:block;font-weight:700;margin-bottom:6px;color:#223256;">방문 희망일</label>
-            <input type="text" name="date" placeholder="예: 2026-08-15" style="width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font:inherit;">
+            <input type="date" name="date" class="date-empty" style="width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font:inherit;color:#333;">
           </div>
         </div>
         <div style="margin-bottom:16px;">
@@ -563,6 +568,11 @@
   </script>
   <script>
   document.querySelectorAll('input[type="date"]').forEach(function(el){
+    el.classList.add('date-empty');
+    el.addEventListener('change',function(){
+      if(this.value) this.classList.remove('date-empty');
+      else this.classList.add('date-empty');
+    });
     el.addEventListener('click',function(){try{this.showPicker();}catch(e){}});
     el.style.cursor='pointer';
   });
