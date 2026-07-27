@@ -513,7 +513,10 @@
           </div>
           <div>
             <label style="display:block;font-weight:700;margin-bottom:6px;color:#223256;">방문 희망일</label>
-            <input type="date" name="date" class="date-empty" style="width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font:inherit;color:#333;">
+            <div style="position:relative;">
+              <div id="date-display" onclick="document.getElementById('date-input').click()" style="width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font:inherit;background:#f5f5f5;color:#aaa;cursor:pointer;box-sizing:border-box;-webkit-user-select:none;user-select:none;">날짜를 선택해주세요</div>
+              <input type="date" id="date-input" name="date" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;box-sizing:border-box;" onchange="var d=this.value?new Date(this.value+'T00:00:00').toLocaleDateString('ko-KR'):null;var el=document.getElementById('date-display');el.textContent=d||'날짜를 선택해주세요';el.style.color=d?'#333':'#aaa';">
+            </div>
           </div>
         </div>
         <div style="margin-bottom:16px;">
