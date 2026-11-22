@@ -557,8 +557,11 @@
 </footer>
 
   <script>
+/* conflict resolution: retain the remote source parsing and merge attribution fields */
 (function(){
   var ENDPOINT='https://script.google.com/macros/s/AKfycbzXiCO-C1RmUXb96X-Cx8bluQzdhWhGZDrT5ECLGosPDD4_sX8irZmu4pZ3veovgEOa/exec';
+  var STORAGE_KEY='gongju_jinarehii_attribution_v1';
+  var TRACKING_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','gclid','n_media','n_query'];
   function parseAdSource(){
     var qs=window.location.search;
     if(!qs)return'직접 유입';
@@ -569,25 +572,52 @@
     var us=p.get('utm_source')||'';if(us)return us+(p.get('utm_medium')?'/'+p.get('utm_medium'):'');
     return'기타';
   }
+  function makeId(prefix){
+    if(window.crypto&&typeof window.crypto.randomUUID==='function')return prefix+'-'+window.crypto.randomUUID();
+    return prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
+  }
+  function appendTracking(fd,eventType,eventId){
+    var params=new URLSearchParams(location.search),current={};
+    TRACKING_KEYS.forEach(function(key){if(params.get(key))current[key]=params.get(key);});
+    current.landing_page=location.href;
+    current.landing_referrer=document.referrer||'';
+    current.first_landed_at=new Date().toISOString();
+    try{current=Object.assign({},JSON.parse(sessionStorage.getItem(STORAGE_KEY)||'{}'),current);sessionStorage.setItem(STORAGE_KEY,JSON.stringify(current));}catch(error){}
+    Object.keys(current).forEach(function(key){fd.append(key,current[key]);});
+    fd.append('event_type',eventType);
+    fd.append('event_id',eventId);
+    fd.append('event_at',new Date().toISOString());
+  }
   var _ip='';
   fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).then(function(d){_ip=d.ip||'';}).catch(function(){});
   var adSource=parseAdSource();
+  window.gongjuTrackPhoneClick=function(){
+    var fd=new URLSearchParams(),eventId=makeId('phone');
+    fd.append('project','공주월송 진아레히');
+    fd.append('page',location.href);
+    fd.append('ip',_ip);
+    fd.append('adSource',adSource);
+    appendTracking(fd,'phone_click',eventId);
+    try{fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:fd});}catch(error){}
+    try{if(window.wcs&&typeof wcs.trans==='function')wcs.trans({type:'lead',id:eventId});}catch(error){}
+  };
   document.addEventListener('DOMContentLoaded',function(){
     document.querySelectorAll('.consult-form').forEach(function(form){
       var hp=document.createElement('input');hp.type='text';hp.name='_hp';hp.setAttribute('tabindex','-1');hp.setAttribute('autocomplete','off');hp.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';form.appendChild(hp);
       var statusEl=form.querySelector('.form-status');var btn=form.querySelector('button[type="submit"]');
       form.addEventListener('submit',function(e){
         e.preventDefault();
-        var hpVal=form.querySelector('input[name="_hp"]');if(hpVal&&hpVal.value.trim()){if(statusEl)statusEl.textContent='상담신청이 접수되었습니다. 담당자가 순차 연락드립니다.';form.reset();return;}
-        var fd=new URLSearchParams();new FormData(form).forEach(function(v,k){if(k!=='_hp')fd.append(k,v);});
+        var hpVal=form.querySelector('input[name="_hp"]');if(hpVal&&hpVal.value.trim()){if(statusEl)statusEl.textContent='상담신청을 전송했습니다. 담당자 확인 후 순차 연락드립니다.';form.reset();return;}
+        var fd=new URLSearchParams(),eventId=makeId('web-lead');new FormData(form).forEach(function(v,k){if(k!=='_hp')fd.append(k,v);});
         fd.append('project',form.dataset.project||document.title);
         fd.append('page',window.location.href);
         fd.append('userAgent',navigator.userAgent);
         fd.append('ip',_ip);
         fd.append('adSource',adSource);
+        appendTracking(fd,'web_lead_submit',eventId);
         if(btn)btn.disabled=true;if(statusEl)statusEl.textContent='접수 중입니다...';
         fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:fd})
-          .then(function(){form.reset();try{if(window.wcs){if(!wcs_add)var wcs_add={};wcs_add['wa']='s_305d99facc63';var _conv={};_conv.type='lead';wcs.trans(_conv);}}catch(e){}if(statusEl)statusEl.textContent='상담신청이 접수되었습니다. 담당자가 순차 연락드립니다.';  })
+          .then(function(){form.reset();try{if(window.wcs){if(!wcs_add)var wcs_add={};wcs_add['wa']='s_305d99facc63';wcs.trans({type:'lead',id:eventId});}}catch(e){}if(statusEl)statusEl.textContent='상담신청을 전송했습니다. 담당자 확인 후 순차 연락드립니다.';  })
           .catch(function(){if(statusEl)statusEl.textContent='접수 중 오류가 발생했습니다. 전화로 문의 부탁드립니다.';})
           .finally(function(){if(btn)btn.disabled=false;});
       });
@@ -621,7 +651,7 @@
     var link=event.target.closest&&event.target.closest('a[href^="tel:"]');
     if(!link||moving)return;
     event.preventDefault();moving=true;
-    try{if(window.wcs&&typeof wcs.trans==='function')wcs.trans({type:'lead',id:'phone-'+Date.now()});}catch(error){}
+    try{if(typeof window.gongjuTrackPhoneClick==='function')window.gongjuTrackPhoneClick();}catch(error){}
     setTimeout(function(){window.location.href=link.href;},250);
   },true);
 })();
