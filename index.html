@@ -588,7 +588,7 @@
     fd.append('page',location.href);
     fd.append('adSource',adSource);
     appendTracking(fd,'phone_click',eventId);
-    try{fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:fd});}catch(error){}
+    try{fetch(ENDPOINT,{method:'POST',body:fd});}catch(error){}
     try{if(window.wcs&&typeof wcs.trans==='function')wcs.trans({type:'lead',id:eventId});}catch(error){}
   };
   document.addEventListener('DOMContentLoaded',function(){
@@ -605,9 +605,15 @@
         fd.append('adSource',adSource);
         appendTracking(fd,'web_lead_submit',eventId);
         if(btn)btn.disabled=true;if(statusEl)statusEl.textContent='접수 중입니다...';
-        fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:fd})
-          .then(function(){form.reset();try{if(window.wcs){if(!wcs_add)var wcs_add={};wcs_add['wa']='s_305d99facc63';wcs.trans({type:'lead',id:eventId});}}catch(e){}if(statusEl)statusEl.textContent='상담신청을 전송했습니다. 담당자 확인 후 순차 연락드립니다.';  })
-          .catch(function(){if(statusEl)statusEl.textContent='접수 중 오류가 발생했습니다. 전화로 문의 부탁드립니다.';})
+        fetch(ENDPOINT,{method:'POST',body:fd})
+          .then(function(response){if(!response.ok)throw new Error('receipt_unconfirmed');return response.json();})
+          .then(function(receipt){
+            if(!receipt||receipt.stored!==true)throw new Error('receipt_unconfirmed');
+            form.reset();
+            try{if(window.wcs){if(!wcs_add)var wcs_add={};wcs_add['wa']='s_305d99facc63';wcs.trans({type:'lead',id:eventId});}}catch(e){}
+            if(statusEl)statusEl.textContent='상담신청이 정상 접수되었습니다. 접수번호: '+(receipt.receiptId||eventId);
+          })
+          .catch(function(){if(statusEl)statusEl.textContent='접수 확인에 실패했습니다. 1800-3688로 전화 문의 부탁드립니다.';})
           .finally(function(){if(btn)btn.disabled=false;});
       });
     });
