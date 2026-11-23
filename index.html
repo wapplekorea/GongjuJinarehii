@@ -2,14 +2,7 @@
 <html lang="ko">
 <head>
 <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
-<script type="text/javascript">if(!wcs_add)var wcs_add={};wcs_add["wa"]="s_305d99facc63";if(!_nasa)var _nasa={};if(window.wcs){wcs.inflow("wapplekorea.github.io/GongjuJinarehii");wcs_do();}</script>  <script>
-    fetch('https://api.ipify.org?format=json')
-      .then(r=>r.json()).then(d=>{
-        if(d.ip && d.ip.startsWith('121.183.250.')){
-          document.documentElement.innerHTML='';
-        }
-      }).catch(()=>{});
-  </script>
+<script type="text/javascript">if(!wcs_add)var wcs_add={};wcs_add["wa"]="s_305d99facc63";if(!_nasa)var _nasa={};if(window.wcs){wcs.inflow("wapplekorea.github.io/GongjuJinarehii");wcs_do();}</script>
 <meta charset="UTF-8">
 <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -588,14 +581,11 @@
     fd.append('event_id',eventId);
     fd.append('event_at',new Date().toISOString());
   }
-  var _ip='';
-  fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).then(function(d){_ip=d.ip||'';}).catch(function(){});
   var adSource=parseAdSource();
   window.gongjuTrackPhoneClick=function(){
     var fd=new URLSearchParams(),eventId=makeId('phone');
     fd.append('project','공주월송 진아레히');
     fd.append('page',location.href);
-    fd.append('ip',_ip);
     fd.append('adSource',adSource);
     appendTracking(fd,'phone_click',eventId);
     try{fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:fd});}catch(error){}
@@ -612,7 +602,6 @@
         fd.append('project',form.dataset.project||document.title);
         fd.append('page',window.location.href);
         fd.append('userAgent',navigator.userAgent);
-        fd.append('ip',_ip);
         fd.append('adSource',adSource);
         appendTracking(fd,'web_lead_submit',eventId);
         if(btn)btn.disabled=true;if(statusEl)statusEl.textContent='접수 중입니다...';
